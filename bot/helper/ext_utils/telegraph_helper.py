@@ -69,10 +69,16 @@ class TelegraphHelper:
                     nxt_page += 1
             self.edit_page(
                 path = path[prev_page],
-                title = 'Torrent Search',
+                title = f"{config_dict['TITLE_NAME']} Torrent Search",
                 content=content
             )
         return
 
-
-telegraph=TelegraphHelper('MIRROR RAGE', 'https://t.me/MirrorRage')
+try:
+    AUTHOR_NAME = config_dict['AUTHOR_NAME']
+    AUTHOR_URL = config_dict['AUTHOR_URL']
+    telegraph=TelegraphHelper(f"{config_dict['AUTHOR_NAME']}", f"{config_dict['AUTHOR_URL']}")
+except Exception as err:
+    LOGGER.warning(f"Can't Create Telegraph Account: {err}")
+    telegraph = None
+    pass
