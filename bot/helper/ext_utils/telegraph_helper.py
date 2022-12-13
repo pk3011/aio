@@ -4,12 +4,12 @@ from time import sleep
 from telegraph import Telegraph
 from telegraph.exceptions import RetryAfterError
 
-from bot import LOGGER
+from bot import LOGGER, config_dict
 
 
 class TelegraphHelper:
     def __init__(self, author_name=None, author_url=None):
-        self.telegraph = Telegraph(domain='telegra.ph')
+        self.telegraph = Telegraph(domain='graph.org')
         self.short_name = ''.join(SystemRandom().choices(ascii_letters, k=8))
         self.access_token = None
         self.author_name = author_name
@@ -53,6 +53,7 @@ class TelegraphHelper:
         return self.edit_page(path, title, content)
 
     def edit_telegraph(self, path, telegraph_content):
+        TITLE_NAME = config_dict['TITLE_NAME']
         nxt_page = 1
         prev_page = 0
         num_of_path = len(path)
