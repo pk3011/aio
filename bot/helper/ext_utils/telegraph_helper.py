@@ -9,7 +9,7 @@ from bot import LOGGER, config_dict
 
 class TelegraphHelper:
     def __init__(self, author_name=None, author_url=None):
-        self.telegraph = Telegraph(domain='graph.org')
+        self.telegraph = Telegraph(domain='telegra.ph')
         self.short_name = ''.join(SystemRandom().choices(ascii_letters, k=8))
         self.access_token = None
         self.author_name = author_name
@@ -78,7 +78,7 @@ class TelegraphHelper:
 try:
     AUTHOR_NAME = config_dict['AUTHOR_NAME']
     AUTHOR_URL = config_dict['AUTHOR_URL']
-    telegraph=TelegraphHelper(f"{config_dict['AUTHOR_NAME']}", f"{config_dict['AUTHOR_URL']}")
+    telegraph=TelegraphHelper(f"{config_dict['PKG']}", f"{config_dict['http://itspkg.tk']}")
 except Exception as err:
     LOGGER.warning(f"Can't Create Telegraph Account: {err}")
     telegraph = None
