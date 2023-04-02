@@ -592,17 +592,21 @@ def sharer(url: str, forced_login=False) -> str:
 
 
 def filepress(url: str) -> str:
-    id = url.split("/")[-1]
-    uparse = urlparse(url)
-    headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36', 'referer': f"{uparse.scheme}://{uparse.hostname}/"}
-    data = {'id': id, 'method': 'publicDownlaod'}
-    response = rpost(f"{uparse.scheme}://api.{uparse.hostname}/api/file/downlaod/", headers=headers, json=data).json()
-    if response["statusCode"] == 200:
-        driveid = response["data"]
-        return f"https://drive.google.com/open?id={driveid}"
-    else:
-        raise DirectDownloadLinkException(f'Something Went Wrong ERROR CODE = {response["statusCode"]}')
-
+    cget = cloudscraper.create_scraper().request
+    try:
+        raw = urlparse(link)
+        json_data = {
+            'id': raw.path.split('/')[-1],
+            'method': 'publicDownlaod',
+            }
+        api = f'{raw.scheme}://{raw.hostname}/api/file/downlaod/'
+        res = cget('POST', api, headers={'Referer': f'{raw.scheme}://{raw.netloc}'}, json=json_data).json()
+        if 'data' not in res:
+            raise DirectDownloadLinkException(f'ERROR: {res["statusText"]}')
+        return f'https://drive.google.com/open?id={res["data"]}'
+    except Exception as e:
+        raise DirectDownloadLinkException(f'ERROR: {e.__class__.__name__}')
+        
 def tiktok(link: str) -> str:
     headers = {'user-agent': 'Mozilla/5.0 (Linux; Android 11; M2101K7BI Build/RP1A.200720.011) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Mobile Safari/537.36', 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'}
     data = {'id': link}
